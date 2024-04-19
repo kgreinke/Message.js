@@ -1,11 +1,11 @@
 import db from "../db/connection.js";
-const User = require('../models/user');
+const User = require('../models/user-model.js');
 const bcryptjs = require('bcryptjs');
 const jsonToken = require('jsonwebtoken');
 const { errorHandler } = require('../utils/errorHandler')
 
 // Signup middleware
-// Route: POST / signup
+// Route: POST /signup
 // Access: Public
 const signUP = async(req, res, next) => {
     try {
@@ -45,10 +45,10 @@ const signUP = async(req, res, next) => {
         console.error(err);
         res.status(500).send("Error Creating User");
     }
-}
+};
 
 // Sign In Middleware
-// Route: POST / sign-in
+// Route: POST /sign-in
 // Access: Public
 const signIn = async(req, res, next) => {
     const { username, password } = req.body;
@@ -76,7 +76,25 @@ const signIn = async(req, res, next) => {
         res.cookie('token', token)
             .status(200)
             .json(rest)
-    } catch (err){
+    } catch(err) {
         next(err)
     }
-}
+};
+
+// User Sign Out Middleware
+// Route: GET /sign-out
+// Access: Public
+const signOut = async(req, res, next) => {
+    try{
+        res.cookie('token', '');
+        res.status(200).json('User has been logged out.');
+    } catch(err) {
+        next(err);
+    }
+};
+
+module.exports = {
+    signUp,
+    signIn,
+    signOut,
+};
