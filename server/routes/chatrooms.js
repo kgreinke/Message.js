@@ -34,6 +34,9 @@ router.post("/", async(req, res) => {
 
         let collection = await db.collection("chatroom");
         let result = await collection.insertOne(newChatroom);
-        res.sendFile
+        res.sendFile(result).status(204);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error Creating Chat Room");
     }
-})
+});

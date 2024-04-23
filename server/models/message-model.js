@@ -16,6 +16,7 @@ const MessageSchema = new mongoose.Schema( {
         type: String, 
         required: true 
     },
+    // Sender data.
     sender: {
         // User name of sender.
         sender_name: { 
@@ -24,11 +25,16 @@ const MessageSchema = new mongoose.Schema( {
         },
         // _id of sender.
         sender_id: { 
-            type: Schema.ObjectId, 
-            required: true 
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: 'users' 
         }
     },
-    chat_id: { type: Schema.ObjectId },
+    // Id of chatroom.
+    chat_id: { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'chatrooms'
+    },
+    // Timestamps of message.
     timestamps: {
         // Dev Note:
         // The createdAt property is immutable, and Mongoose overwrites any 
