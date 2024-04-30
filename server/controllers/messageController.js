@@ -12,6 +12,12 @@ const getMessages = async(req, res, next) => {
 
         const messages = await Message.find( {
             chat_id: { $in: [user_id]}
-        })
+        }).sort( { createdAt: 1} );
+
+        res.json(messages);
+    } catch(err) {
+        next(err);
     }
 }
+
+module.exports = getMessages;

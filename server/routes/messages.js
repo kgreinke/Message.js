@@ -1,14 +1,8 @@
-import express from "express";
-
-// To help connect to database.
-import db from "../db/connection.js";
-
-// To help convert id from string to ObjectId for the _id.
-import { ObjectId } from "mongodb";
-
-
-// Router is an instance of the express router.
-// Used to define routes.
-// Router will be added as a 'middleware' and will take control
-// of the resquests starting with path /record.
+const express = require('express');
 const router = express.Router();
+const validateUserToken = require('../utils/validateUserToken');
+const messageController = require('../controllers/messageController');
+
+router.get('/:userId', validateUserToken, messageController.getMessages);
+
+module.exports = router;

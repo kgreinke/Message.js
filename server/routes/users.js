@@ -1,3 +1,13 @@
+const express = require('express');
+const router = express.Router();
+const userController = require('../controllers/userController');
+
+router.get('/', userController.getUsers);
+
+module.exports = router;
+
+
+/*
 import express from "express";
 
 // To help connect to database.
@@ -75,3 +85,4 @@ router.delete("/:id", async(req, res) => {
 });
 
 export default router;
+*/

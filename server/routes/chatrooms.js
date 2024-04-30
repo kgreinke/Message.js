@@ -1,3 +1,14 @@
+const express = require('express');
+const router = express.Router();
+const validateUserToken = require('../utils/validateUserToken');
+const chatroomController = require('../controllers/chatroomController');
+
+router.get('/:userId', validateUserToken, chatroomController.getChatrooms);
+
+module.exports = router;
+
+
+/*
 import express from "express";
 
 // To help connect to database.
@@ -40,3 +51,4 @@ router.post("/", async(req, res) => {
         res.status(500).send("Error Creating Chat Room");
     }
 });
+*/
