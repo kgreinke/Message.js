@@ -1,170 +1,118 @@
-require('dotenv').config()
-
-const mongoose = require('mongoose');
 const express = require('express');
-const dbConnect = require('./config/dbConnection')
-const ChatApp = express();
-const ws = require('ws');
-const jsonwebtoken = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
-const ChatRoom = require('./models/chatroom-model');
-const Message = require('./models/message-model');
-const fs = require('fs');
-const fsPromises = require('fs').promises;
-const path = require('path');
+const cors = require('cors');
+const { createServer } = require('http');
+const { join } = require('path');
+const { Server } = require('socket.io');
+const { MongoClient, ObjectId } = require('mongodb');
 
-const jsonSecret = process.env.jsonSecret;
-const PORT = process.env.PORT || 5050;
-console.log(process.env.NODE_ENV);
-dbConnect();
-
-ChatApp.use(express.json());
-ChatApp.use(cookieParser());
-ChatApp.use('/chatApp/v1/auth', require('./routes/auth'));
-ChatApp.use('/chatApp/v1/chatrooms', require('./routes/chatrooms'));
-ChatApp.use('/chatApp/v1/messages', require('./routes/messages'));
-ChatApp.use('/chatApp/v1/users', require('./routes/users'));
-
-// Make default error handler middleware
-ChatApp.use( (err, req, res, next) => {
-    const statusCode = err.statusCode || 500;
-    const message = err.message || 'Unknown Internal Server Error';
-
-    return res.status(statusCode).json( {
-        text: 'default error handler',
-        success: false,
-        statusCode,
-        message,
-    })
-});
-
-// Database Connections
-mongoose.connetion.once('open', () => {
-    console.log("Connected to MongoDB")
-});
-
-mongoose.connection.on('error', err => {
-    console.log(err)
-});
-
-
-// Local Server Hosting
-let server = ChatApp.listen(PORT, () => {
-    console.log('Server running on port: ${PORT}')
-});
-
-
-// File Uploading
-const save = async(userFilePath, filename, bufferData) => {
-    try {
-        await fsPromises.writeFile(path.join(userFilePath, filename), bufferData);
-    } catch(err) {
-        console.log(err);
-    }
-};
-
-// Socket Server Creation
-const webSocketServer = new ws.WebSocketServer( { server } )
-webSocketServer.on('connection', (connection, req)  => {
-    console.log('Web Socket Server: Connection Aquired');
-
-    // Log of all clients currently on web socket server
-    const notifyUserLogInOut = () => {
-        [...webSocketServer.clients].forEach(client => {
-            client.send(JSON.stringify( {
-                online: [...webSocketServer.clients].map(c => ({
-                    userId: c.userId,
-                    name: c.name
-                }))
-            }))
-        })
-    }
-
-    connection.isAlive = true;
-
-    // Check For User Timeout
-    // If timeout: Terminate user connection 
-    connection.timer = setInterval( () => {
-        // Makes clients ping server on 5 second interval
-        connection.ping()
-
-        connection.deathTimer = setTimeout( () => {
-            connection.isAlive = false;
-            clearInterval(connection.timer);
-            connection.terminate();
-            notifyUserLogInOut();
-            console.log("User Terminated");
-        }, 1000)
-
-    }, 5000)
-    // Else: Do not terminate user connection
-    connection.on('pong', () => {
-        clearTimeout(connection.deathTimer)
-    });
-
-
-    // Retrieve cookie from specified connection
-    // Decode for userId and name from cookie
-    const cookie = req.headers.cookie;
-    if(cookie) {
-        const cookieToken = cookie.split(';').find(str => str.startsWith('token'));
-
-        if(cookieToken) {
-            const token = cookieToken.split('=')[1];
-
-            if(token) {
-                try{
-                    jsonwebtoken.verify(token, jsonSecret, {}, (err, userData) => {
-                        const { userId, name } = userData;
-                        // Set attributes in connection
-                        connection.userId = userId;
-                        connection.name = name;
-                    });
-                } catch(err){
-                    throw err;
-                }
-            }
-        }
-    }
-
-    // Recieve Message From Client
-    connection.on('message', async(message) => {
-        const messageData = JSON.parse(message.toString());
-        const { text, chatId } = messageData;
-
-        if( text && chatId ) {
-            // Send to DB
-            const messageDocument = await Message.create({
-                sender: connection.userId,
-                chat_id: chatId,
-                text: text
-            });
-        }
-    });
-
-    notifyUserLogInOut();
-})
-
-
-
-/*
-import express from "express";
-import cors from "cors";
-import users from "./routes/users.js";
-import chatrooms from "./routes/chatrooms.js";
-import messages from "./routes/messages.js";
-
-const PORT = process.env.PORT || 5050;
 const app = express();
+const server = createServer(app);
+const io = new Server(server);
 
 app.use(cors());
 app.use(express.json());
-app.use("/users", users);
-app.use("/chatrooms", chatrooms);
-app.use("/messages", messages);
 
-// start Express.js server
-app.listen(PORT, () => {
-    console.log('Server listening on port ${PORT}');
+const client = new MongoClient("mongodb+srv://test:testing123@chatapptest.7pslh8a.mongodb.net/?retryWrites=true&w=majority&appName=ChatAppTest");
+
+let db, messageCollection, chatroomCollection;
+
+async function initializeDB() {
+    try {
+        await client.connect();
+        db = client.db("ChatApp");
+        messageCollection = db.collection("Messages");
+        chatroomCollection = db.collection("ChatRoom");
+        console.log('Connected to MongoDB');
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+initializeDB();
+
+app.get('/chats', async (req, res) => {
+    try {
+        const roomId = req.query.room;
+        const result = await chatroomCollection.findOne({ "_id": new ObjectId(roomId) });
+        if (!result) {
+            res.status(404).send({ message: "Chat room not found" });
+        } else {
+            res.send(result);
+        }
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
 });
+
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    socket.on('join', async (roomId) => {
+        try {
+            if (roomId == "mongodb"){
+                roomId = new ObjectId();
+            }
+            let result = await chatroomCollection.findOne( { "_id": roomId } );
+            if (!result){
+                await chatroomCollection.insertOne( { "_id": roomId, messages: [] } );
+            }
+
+            socket.join(roomId);
+            socket.emit('joined', roomId);
+            socket.activeRoom = roomId;
+        } catch (err) {
+            console.log(err)
+        }
+    });
+        
+/*
+    socket.on('join', async (roomId) => {
+        try {
+            let room = await chatroomCollection.findOne({ "_id": new ObjectId(roomId) });
+            if (!room) {
+                await chatroomCollection.insertOne({ "_id": new ObjectId(roomId), messages: [] });
+            }
+
+            socket.join(roomId);
+            socket.emit('joined', roomId);
+            socket.activeRoom = roomId;
+            console.log(`User joined room: ${roomId}`);
+        } catch (err) {
+            console.error(err);
+        }
+    });
+
+    socket.on('new message', async (message) => {
+        try {
+            const roomId = socket.activeRoom;
+            if (roomId) {
+                await chatroomCollection.updateOne(
+                    { "_id": new ObjectId(roomId) },
+                    { "$push": { "messages": message } }
+                );
+                io.to(roomId).emit('new message', message);
+                console.log(`New message in room ${roomId}: ${message}`);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    });
 */
+    socket.on('new message', (message) => {
+        chatroomCollection.updateOne({ "_id": socket.activeRoom }, {
+            "$push": {
+                "messages": message
+            }
+        });
+        io.to(socket.activeRoom).emit('new message', message);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('A user disconnected');
+    });
+});
+
+const PORT = process.env.PORT || 4000;
+server.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
