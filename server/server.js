@@ -4,10 +4,23 @@ const { createServer } = require('http');
 const { join } = require('path');
 const { Server } = require('socket.io');
 const { MongoClient, ObjectId } = require('mongodb');
+const { chats } = require("./data/data");
+const dotenv = require("dotenv");
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server);
+
+dotenv.config();
+
+app.get("/", (req, res) => {
+    res.send("API is Running");
+});
+
+app.get("/api/chat", (req, res) => {
+    res.send(chats);
+});
+
 
 app.use(cors());
 app.use(express.json());
@@ -29,6 +42,7 @@ async function initializeDB() {
 }
 
 initializeDB();
+
 
 app.get('/chats', async (req, res) => {
     try {
@@ -113,6 +127,11 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 4000;
-server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+
+app.listen(PORT, () => {
+     console.log(`Server Started on PORT ${PORT}`);
 });
+
+//server.listen(PORT, () => {
+  //  console.log(`Server is  on port ${PORT}`);
+//});
