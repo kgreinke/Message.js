@@ -3,32 +3,30 @@
 const { ObjectId } = require('mongodb');
 const mongoose = require('mongoose');
 
+
 // Maps to MongoDB 'chatroom' collection.
 const ChatRoomSchema = new mongoose.Schema( {
-    // Chatroom id key
-    _id: {
-        type: ObjectId,
-        required: true
-    },
-    // Name of the chat room.
-    name: { 
+// Name of the chat room.
+    chatName: { 
         type: String,
-        required: true
+        required: true,
     },
     // Array of users id's.    
     members: [
         {
             type: mongoose.Schema.Types.ObjectId, 
-            ref: 'user'
+            ref: 'User',
         }
     ],
     // Primitive array of messages.
-    messages: {
-        type: [mongoose.Schema.MessageSchema],
-        default: undefined
-    }
-});
+    lastMessage: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Message'
+    },
+    },
+    { timestamps: true }
+);
 
 const ChatRoom = mongoose.model('ChatRoom', ChatRoomSchema);
 
-module.exports = ChatRoom;
+module.exports = ChatRoom; 
