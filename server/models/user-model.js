@@ -3,6 +3,25 @@
 const { ObjectId } = require('mongodb');
 const mongoose = require('mongoose');
 
+const UserSchema = mongoose.Schema({
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    password: { type: String, required: true },
+    pic: { 
+        type: String, 
+        required: true, 
+        default: 
+        "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
+    },
+  },
+    { timestamps: true }
+);
+
+const User = mongoose.model("User", UserSchema);
+
+module.exports = User;
+
+/*
 // To provide password hashing.
 const bcrypt = require(bcrypt);
 const SALT_WORK_FACTOR = 10;
@@ -37,3 +56,4 @@ const UserSchema = new mongoose.Schema( {
 const User = mongoose.model('User', UserSchema);
 
 module.exports = User;
+*/

@@ -1,0 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,300;1,300&display=swap');
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.App {
+    min-height: 100vh;
+    display: flex;
+    background-image: url('./Background.jpg');
+    background-size: cover;
+    background-position: center;
+    
+}
