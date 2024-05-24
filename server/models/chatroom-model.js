@@ -2,6 +2,7 @@
 const { ObjectId, Timestamp } = require('mongodb');
 const mongoose = require('mongoose');
 
+<<<<<<< HEAD
 const chatModel = mongoose.Schema(
     {
         chatName: { type: String, trim: true},
@@ -36,34 +37,37 @@ module.exports = Chat;
 // users
 // latestMessage
 // groupAdmin
+=======
+>>>>>>> de53cb0d80d8f45950310fbaa1e2602a86f66437
 
 // Maps to MongoDB 'chatroom' collection.
 
 const ChatRoomSchema = new mongoose.Schema( {
-    // Chatroom id key
-    _id: {
-        type: ObjectId,
-        required: true
-    },
-    // Name of the chat room.
-    name: { 
+// Name of the chat room.
+    chatName: { 
         type: String,
-        required: true
+        required: true,
     },
     // Array of users id's.    
     members: [
         {
             type: mongoose.Schema.Types.ObjectId, 
-            ref: 'user'
+            ref: 'User',
         }
     ],
     // Primitive array of messages.
-    messages: {
-        type: [mongoose.Schema.MessageSchema],
-        default: undefined
-    }
-});
+    lastMessage: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Message'
+    },
+    },
+    { timestamps: true }
+);
 
 const ChatRoom = mongoose.model('ChatRoom', ChatRoomSchema);
 
+<<<<<<< HEAD
 module.exports = ChatRoom;
+=======
+module.exports = ChatRoom; 
+>>>>>>> de53cb0d80d8f45950310fbaa1e2602a86f66437

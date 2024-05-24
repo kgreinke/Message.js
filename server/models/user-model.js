@@ -23,34 +23,47 @@ module.exports = User;
 
 /*
 // To provide password hashing.
-const bcrypt = require(bcrypt);
+const bcrypt = require("bcryptjs");
 const SALT_WORK_FACTOR = 10;
 
 // Maps to MongoDB 'user' collection.
 const UserSchema = new mongoose.Schema( {
-    // User id key
-    // To be used in the chatroom and message collection.
-    _id: { 
-        type: ObjectId, 
-        required: true, 
-        index: { unique: true } // To ensure that _id is unique and not repeated.
-    },
     // Display name of the user.
     name: { 
         type: String, 
-        required: true, 
-        index: { unique: true } // To ensure that name is unique and not repeated.
+        required: true,
+    },
+    // User email for auth
+    email: {
+        type: String,
+        unique: true,
+        required: true,
     },
     // User password.
     password: {
         type: String,
-        required: true
+        required: true,
     },
     // Primative array of chatroom schemas.
     chatrooms: {
         type: [mongoose.Schema.ChatRoomSchema],
-        default: undefined
+        default: undefined,
+    },
+    },
+    { timestamps: true }
+);
+
+userSchema.methods.matchPassword = async function (enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
+};
+
+userSchema.pre("save", async function (next) {
+    if (!this.isModified) {
+      next();
     }
+  
+    const salt = await bcrypt.genSalt(SALT_WORK_FACTOR);
+    this.password = await bcrypt.hash(this.password, salt);
 });
 
 const User = mongoose.model('User', UserSchema);

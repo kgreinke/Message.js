@@ -6,10 +6,16 @@ const { Server } = require('socket.io');
 const { MongoClient, ObjectId } = require('mongodb');
 const { chats } = require("./data/data");
 const dotenv = require("dotenv");
+const colors = require('colors');
+const mongoose = require('mongoose');
+
+const userRoutes = require('./routes/user-route');
+const chatRoomRoutes = require('./routes/chatroom-route');
+const messageRoutes = require('./routes/message-route')
 
 const app = express();
-const server = createServer(app);
-const io = new Server(server);
+//const server = createServer(app);
+//const io = new Server(server);
 
 dotenv.config();
 
@@ -21,10 +27,17 @@ app.get("/api/chat", (req, res) => {
     res.send(chats);
 });
 
+app.use("/api/user", userRoutes);
+app.use("/api/chatroom", chatRoomRoutes);
+app.use("/api/message", messageRoutes);
+
 
 app.use(cors());
 app.use(express.json());
 
+const ATLAS_URI = "mongodb+srv://test:testing123@chatapptest.7pslh8a.mongodb.net/?retryWrites=true&w=majority&appName=ChatAppTest";
+
+/*
 const client = new MongoClient("mongodb+srv://test:testing123@chatapptest.7pslh8a.mongodb.net/?retryWrites=true&w=majority&appName=ChatAppTest");
 
 let db, messageCollection, chatroomCollection;
@@ -42,7 +55,34 @@ async function initializeDB() {
 }
 
 initializeDB();
+*/
 
+const initDB = async () => {
+    try {
+        const connect = await mongoose.connect(process.env.ATLAS_URI,
+            {
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+            }
+        );
+
+        console.log('MongoDB connected to: ${connect.connection.host}'.magenta);
+    } catch (error) {
+        console.error('Error: ${error.message}'.red);
+        process.exit(1);
+    }
+};
+
+const port = porcess.env.PORT || 4000;
+const server = app.listen(port, console.log('Server running on port: ${port}...'.magenta));
+const io = new Server(server,
+    {
+        pingTimeout: 60000,
+        cors: {
+            origin: "https://localhost:3000"
+        },
+    }
+);
 
 app.get('/chats', async (req, res) => {
     try {
@@ -59,8 +99,38 @@ app.get('/chats', async (req, res) => {
 });
 
 io.on('connection', (socket) => {
-    console.log('A user connected');
+    console.log('A user connected'.green.bold);
 
+    socket.on("setup", (userData) => {
+        socket.join(userData._id);
+        socket.emit("connected");
+    });
+
+    socket.on("join chatroom", (roomId) => {
+        socket.join(roomId);
+        console.log('User join chatroom: ${roomId}'.green);
+    });
+
+    socket.on("new message", (message) => {
+        chatroom = message.roomId;
+
+        if (!chatroom.users)
+            return console.log("chatroom.users not defined".red);
+
+        chatroom.users.forEach( (user) => {
+            // if sender is user, do nothing
+            if (user._id == message.sender.sender_id)
+                return;
+
+            socket.in(user._id).emit("message recieved", message);
+        });
+    });
+
+    socket.off("setup", () => {
+        console.log("user disconnected".yellow)
+    })
+
+    /*
     socket.on('join', async (roomId) => {
         try {
             if (roomId == "mongodb"){
@@ -73,13 +143,12 @@ io.on('connection', (socket) => {
 
             socket.join(roomId);
             socket.emit('joined', roomId);
-            socket.activeRoom = roomId;
         } catch (err) {
             console.log(err)
         }
     });
         
-/*
+
     socket.on('join', async (roomId) => {
         try {
             let room = await chatroomCollection.findOne({ "_id": new ObjectId(roomId) });
@@ -111,19 +180,20 @@ io.on('connection', (socket) => {
             console.error(err);
         }
     });
-*/
-    socket.on('new message', (message) => {
-        chatroomCollection.updateOne({ "_id": socket.activeRoom }, {
+
+    socket.on('new message', (message, room) => {    
+        chatroomCollection.updateOne({ "_id": room }, {
             "$push": {
                 "messages": message
             }
         });
-        io.to(socket.activeRoom).emit('new message', message);
+//        io.to(socket.activeRoom).emit('new message', message);
     });
 
     socket.on('disconnect', () => {
-        console.log('A user disconnected');
+        console.log('A user disconnected'.red.bold);
     });
+*/
 });
 
 const PORT = process.env.PORT || 4000;
@@ -132,6 +202,4 @@ app.listen(PORT, () => {
      console.log(`Server Started on PORT ${PORT}`);
 });
 
-//server.listen(PORT, () => {
-  //  console.log(`Server is  on port ${PORT}`);
-//});
+

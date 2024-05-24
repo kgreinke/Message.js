@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "chat_app": "file:.."
+  }
+}
