@@ -1,5 +1,5 @@
 // Chatroom Routees
-
+/*
 const express = require('express');
 const { fetchChat, fetchChatRooms, removeFromChatRoom } = require('../controllers/chatroom-controller');
 
@@ -10,3 +10,4 @@ router.get("/", fetchChatRooms);
 router.put("/remove", removeFromChatRoom);
 
 module.exports = router;
+*/

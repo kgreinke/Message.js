@@ -2,7 +2,7 @@
 
 const handler = require('express-async-handler');
 const ChatRoom = require('../models/chatroom-model');
-const User = require('../models/user-model');
+const User = require('../models/userModel');
 const colors = require('colors');
 
 // Route:           POST /api/chatroom

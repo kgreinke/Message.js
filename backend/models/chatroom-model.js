@@ -2,7 +2,6 @@
 const { ObjectId, Timestamp } = require('mongodb');
 const mongoose = require('mongoose');
 
-<<<<<<< HEAD
 const chatModel = mongoose.Schema(
     {
         chatName: { type: String, trim: true},
@@ -37,8 +36,6 @@ module.exports = Chat;
 // users
 // latestMessage
 // groupAdmin
-=======
->>>>>>> de53cb0d80d8f45950310fbaa1e2602a86f66437
 
 // Maps to MongoDB 'chatroom' collection.
 
@@ -66,8 +63,4 @@ const ChatRoomSchema = new mongoose.Schema( {
 
 const ChatRoom = mongoose.model('ChatRoom', ChatRoomSchema);
 
-<<<<<<< HEAD
 module.exports = ChatRoom;
-=======
-module.exports = ChatRoom; 
->>>>>>> de53cb0d80d8f45950310fbaa1e2602a86f66437

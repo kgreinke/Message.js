@@ -16,7 +16,7 @@ const Homepage = () => {
         borderRadius="lg"
         borderWidth="1px"
       >      
-      <Text fontsize="4xl" fontFamily="Work sans" color="black">
+      <Text fontSize="4xl" fontFamily="Work sans" color="black">
         Messages.js
       </Text>
     </Box>

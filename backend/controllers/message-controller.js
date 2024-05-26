@@ -3,7 +3,7 @@
 const handler = require('express-async-handler');
 const Message = require('../models/message-model');
 const ChatRoom = require('../models/chatroom-model');
-const User = require('../models/user-model');
+const User = require('../models/userModel');
 
 // Route:       GET /api/messages/:roomId
 // Access:      Protected

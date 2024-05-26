@@ -6,29 +6,57 @@ const { Server } = require('socket.io');
 const { MongoClient, ObjectId } = require('mongodb');
 const { chats } = require("./data/data");
 const dotenv = require("dotenv");
-const colors = require('colors');
+const connectDB = require("./config/db");
+const colors = require("colors");
 const mongoose = require('mongoose');
+const userRoutes = require("./routes/userRoutes");
 
-const userRoutes = require('./routes/user-route');
 const chatRoomRoutes = require('./routes/chatroom-route');
-const messageRoutes = require('./routes/message-route')
+const messageRoutes = require('./routes/message-route');
+const {notFound, errorHandler} = require("./middleware/errorMiddleware");
 
 const app = express();
 //const server = createServer(app);
 //const io = new Server(server);
 
 dotenv.config();
+connectDB();
+app.use(express.json()); //to accept JSON Data
 
 app.get("/", (req, res) => {
     res.send("API is Running");
 });
 
-app.get("/api/chat", (req, res) => {
-    res.send(chats);
-});
+app.use('/api/user', userRoutes);
+
+app.use(notFound)
+app.use(errorHandler)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.use("/api/user", userRoutes);
-app.use("/api/chatroom", chatRoomRoutes);
+//app.use("/api/chatroom", chatRoomRoutes);
 app.use("/api/message", messageRoutes);
 
 
@@ -68,13 +96,13 @@ const initDB = async () => {
 
         console.log('MongoDB connected to: ${connect.connection.host}'.magenta);
     } catch (error) {
-        console.error('Error: ${error.message}'.red);
-        process.exit(1);
+        console.error('Error: ${error.message}'.red.bold);
+        process.exit();
     }
 };
 
-const port = porcess.env.PORT || 4000;
-const server = app.listen(port, console.log('Server running on port: ${port}...'.magenta));
+const port = process.env.PORT || 4000;
+const server = app.listen(port, console.log(`Server running on port: ${port}...`.yellow.bold));
 const io = new Server(server,
     {
         pingTimeout: 60000,
@@ -198,8 +226,8 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 4000;
 
-app.listen(PORT, () => {
-     console.log(`Server Started on PORT ${PORT}`);
-});
+//app.listen(PORT, () => {
+  //   console.log(`Server Started on PORT ${PORT}`, yellow.bold);
+//});
 
 
