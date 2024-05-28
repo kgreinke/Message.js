@@ -18,7 +18,7 @@ const userSchema = mongoose.Schema(
       default: false,
     },
   },
-  { timestamps: true }
+  { timestaps: true }
 );
 
 userSchema.methods.matchPassword = async function (enteredPassword) {
@@ -37,7 +37,3 @@ userSchema.pre("save", async function (next) {
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;
-
-
-
-

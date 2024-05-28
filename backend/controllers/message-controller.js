@@ -2,7 +2,7 @@
 
 const handler = require('express-async-handler');
 const Message = require('../models/message-model');
-const ChatRoom = require('../models/chatroom-model');
+const ChatRoom = require('../models/chatModel');
 const User = require('../models/userModel');
 
 // Route:       GET /api/messages/:roomId
