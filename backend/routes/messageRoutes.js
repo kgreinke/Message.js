@@ -5,7 +5,7 @@ const { allMessages, sendMessage } = require('../controllers/message-controller'
 
 const router = express.Router();
 
-router.get("/:roomId")
+router.get("/:roomId", allMessages);
 router.post("/", sendMessage);
 
 module.exports = router;
