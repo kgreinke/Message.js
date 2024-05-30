@@ -2,6 +2,9 @@ const asyncHandler = require("express-async-handler");
 const Chat = require("../models/chatModel");
 const User = require("../models/userModel");
 
+// Route        POST /api/chat
+// Access       Protected
+// Description  Create or fetch chat
 const accessChat = asyncHandler(async (req, res) => {
   const { userId } = req.body;
 
@@ -48,6 +51,9 @@ const accessChat = asyncHandler(async (req, res) => {
   }
 });
 
+// Route        GET /api/chat
+// Access       Protected
+// Description  Fetch all chats by user._id
 const fetchChats = asyncHandler(async (req, res) => {
   try {
     Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
@@ -68,6 +74,9 @@ const fetchChats = asyncHandler(async (req, res) => {
   }
 });
 
+// Route        POST /api/chat/group
+// Access       Protected
+// Description  Create a new group chat
 const createGroupChat = asyncHandler(async (req, res) => {
   if (!req.body.users || !req.body.name) {
     return res.status(400).send({ message: "Please Fill all the feilds" });
@@ -102,6 +111,9 @@ const createGroupChat = asyncHandler(async (req, res) => {
   }
 });
 
+// Route        PUT /api/chat/rename
+// Access       Protected
+// Description  Rename chatName by chatId
 const renameGroup = asyncHandler(async (req, res) => {
   const { chatId, chatName } = req.body;
 
@@ -125,6 +137,9 @@ const renameGroup = asyncHandler(async (req, res) => {
   }
 });
 
+// Route        PUT /api/chat/groupadd
+// Access       Protected
+// Description  Add user by userId to chat by chatId
 const addToGroup = asyncHandler(async (req, res) => {
     const { chatId, userId } = req.body;
 
@@ -146,6 +161,9 @@ const addToGroup = asyncHandler(async (req, res) => {
     }
 });
 
+// Route        PUT /api/chat/remove
+// Access       Protected
+// Description  Remove one user by userId from chat by chatId
 const removeFromGroup = asyncHandler(async (req, res) => {
     const { chatId, userId } = req.body;
 
@@ -166,9 +184,6 @@ const removeFromGroup = asyncHandler(async (req, res) => {
         res.json(removed);
     }
 });
-
-
-
 
 module.exports = { accessChat, fetchChats, createGroupChat, renameGroup, addToGroup, removeFromGroup};
 

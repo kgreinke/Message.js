@@ -2,6 +2,9 @@ const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const generateToken = require("../config/generateToken");
 
+// Route        GET /api/user?search=
+// Access       Protected
+// Description  Get or search all users by user.name or user.email
 const allUsers = asyncHandler(async (req, res) => {
   const keyword = req.query.search
     ? {
@@ -16,6 +19,9 @@ const allUsers = asyncHandler(async (req, res) => {
   res.send(users);
 });
 
+// Route        POST /api/user
+// Access       Protected
+// Description  Register new user
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, pic } = req.body;
 
@@ -53,6 +59,9 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
+// Route        POST /api/users/login
+// Access       Protected
+// Description  User authentication by user.email and user.password
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
