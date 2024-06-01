@@ -20,7 +20,7 @@ const UserBadgeItem = ({user, handleFunction}) => {
       <CloseIcon pl={1}/>
 
     </Box>
-  )
-}
+  );
+};
 
 export default UserBadgeItem
