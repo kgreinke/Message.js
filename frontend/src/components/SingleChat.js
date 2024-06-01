@@ -83,7 +83,7 @@ const SingleChat = () => {
                     "/api/message",
                     {
                         text: newMessage,
-                      roomId: selectedChat,
+                        chatId: selectedChat._id,
                     },
                     config
                   );
@@ -120,7 +120,7 @@ const SingleChat = () => {
 
     useEffect( () => {
         socket.on("message recieved", (recievedMessage) => {
-            if(!selectedChatCompare || selectedChatCompare._id !== recievedMessage.roomId._id) {
+            if(!selectedChatCompare || selectedChatCompare._id !== recievedMessage.chat._id) {
                 setMessages([...messages, recievedMessage]);
             }
         });

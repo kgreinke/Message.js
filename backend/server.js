@@ -52,37 +52,31 @@ io.on('connection', (socket) => {
         socket.emit("connected");
     });
 
-    socket.on("join chatroom", (roomId) => {
-        socket.join(roomId);
-        console.log("User joined chatroom: ".green + roomId);
+    socket.on("join chatroom", (chat) => {
+        socket.join(chat);
+        console.log("User joined chatroom: ".green + chat);
     });
 
-    socket.on("typing", (roomId) => {
-        socket.in(roomId).emit("typing...");
+    socket.on("typing", (chat) => {
+        socket.in(chat).emit("typing...");
     });
 
-    socket.on("stopped typing", (roomId) => {
-        socket.in(roomId).emit("stopped typing...");
+    socket.on("stopped typing", (chat) => {
+        socket.in(chat).emit("stopped typing...");
     });
 
     // Socket method for instant messaging.
     // When front end emits "new message"
     // Backend catches it, and then emits it
-    // in the associated roomId.
+    // in the associated chat.
     // To catch in front end:
     // socket.on("message receieved", (message) => {...}
     socket.on("new message", (newMessage) => {
-        chatroom = newMessage.roomId;
-
-        if (!chatroom.users)
-            return console.log("chatroom.users not defined".red);
-
-        chatroom.users.forEach( (user) => {
-            // if sender is user, do nothing
-            if (user._id == message.sender._id)
-                return;
-
-            socket.in(user._id).emit("message recieved", message);
+        let chat = newMessage.chat;
+        if (!chat.users) return console.log("chat.users not found !!");
+        chat.users.forEach((user) => {
+          if (user._id == newMessage.sender._id) return;
+          socket.in(user._id).emit("message received", newMessage);
         });
     });
 
