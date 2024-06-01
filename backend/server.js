@@ -79,7 +79,7 @@ io.on('connection', (socket) => {
 
         chatroom.users.forEach( (user) => {
             // if sender is user, do nothing
-            if (user._id == message.sender.sender_id)
+            if (user._id == message.sender._id)
                 return;
 
             socket.in(user._id).emit("message recieved", message);
