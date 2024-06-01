@@ -52,12 +52,8 @@ const MyChats = () => {
       width={{ base: "100%", md: "31%" }}
       borderRadius="lg"
       borderWidth="1px"
-      height="89vh"  // Full viewport height
-
     >
-
-
-      <Box
+     <Box
         pb={3}
         px={3}
         fontSize={{ base: "28px", md: "30px" }}
@@ -112,9 +108,9 @@ const MyChats = () => {
                 {chat.latestMessage && (
                   <Text fontSize="xs">
                     <b>{chat.latestMessage.sender.name} : </b>
-                    {chat.latestMessage.content.length > 50
-                      ? chat.latestMessage.content.substring(0, 51) + "..."
-                      : chat.latestMessage.content}
+                    {chat.latestMessage.text.length > 50
+                      ? chat.latestMessage.text.substring(0, 51) + "..."
+                      : chat.latestMessage.text}
                   </Text>
                 )}
               </Box>

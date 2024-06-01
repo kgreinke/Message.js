@@ -22,9 +22,10 @@ const defaultOptions = {
     },
 };
 
-const SingleChat = () => {
+const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const [messages,setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
+    const [typing, setTyping] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
     const [socketConnected, setSocketConnected] = useState(false);
     const [loading, setLoading] = useState(false);

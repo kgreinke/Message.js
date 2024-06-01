@@ -52,9 +52,9 @@ io.on('connection', (socket) => {
         socket.emit("connected");
     });
 
-    socket.on("join chatroom", (chat) => {
-        socket.join(chat);
-        console.log("User joined chatroom: ".green + chat);
+    socket.on("join chatroom", (chatId) => {
+        socket.join(chatId);
+        console.log("User joined chatroom: ".green + chatId);
     });
 
     socket.on("typing", (chat) => {
