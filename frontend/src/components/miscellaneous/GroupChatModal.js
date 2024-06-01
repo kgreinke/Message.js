@@ -1,4 +1,4 @@
-import { Button, FormControl, Input, useDisclosure, useToast } from '@chakra-ui/react'
+import { Button, FormControl, Input, useDisclosure, useToast, Box} from '@chakra-ui/react'
 import React, { useState } from 'react';
 import {
   Modal,
@@ -55,6 +55,10 @@ const GroupChatModal = ({children}) => {
     }
   };
     const handleSubmit = () => {}
+    const handleDelete = () => {}
+
+
+
     const handleGroup = (userToAdd) => {
         if(selectedUsers.includes(userToAdd)) {
             toast({
@@ -100,12 +104,17 @@ const GroupChatModal = ({children}) => {
                 onChange={(e) => handleSearch(e.target.value)}
                 />
             </FormControl>
+
+          <Box w="100%" display="flex" flexWrap="wrap"
+          
+          
+          >
             {selectedUsers.map(u => (
                 <UserBadgeItem key={user._id} user={u}
-                //handleFunction={() => handleDelete(u)}
+                handleFunction={() => handleDelete(u)}
                 />
             ))}
-
+        </Box>
             {loading ? (
                 <div>loading</div>
             ) : (
