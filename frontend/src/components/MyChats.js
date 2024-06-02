@@ -52,6 +52,7 @@ const MyChats = ({ fetchAgain }) => {
       width={{ base: "100%", md: "31%" }}
       borderRadius="lg"
       borderWidth="1px"
+      height="100%"
     >
      <Box
         pb={3}
@@ -61,7 +62,7 @@ const MyChats = ({ fetchAgain }) => {
         display="flex"
         width="100%"
         justifyContent="space-between"
-        alignItems
+        alignItems="center"
         >
         My Chats
         <GroupChatModal>
