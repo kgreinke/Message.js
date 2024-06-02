@@ -10,14 +10,19 @@ const ChatBox = () => {
   
   return (
     <Box
-      d={{base: selectedChat ? "flex" : "none", md: "flex"}}
+      display={{ base: selectedChat ? "flex" : "none", md: "flex" }}
       alignItems="center"
+      justifyContent="flex-end" 
       flexDir="column"
       p={3}
       bg="grey"
-      w={{base: "100%", md: "69%"}}
-      borderRadius="1g"
+      w={{ base: "75%", md: "62%" }}
+      borderRadius="lg"
       borderWidth="1px"
+      height="89%" 
+      position="fixed" 
+      right="50" 
+      top="69" 
     >
       <SingleChat />
     </Box>
