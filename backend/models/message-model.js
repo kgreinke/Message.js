@@ -2,13 +2,14 @@
 
 const { ObjectId } = require('mongodb');
 const mongoose = require('mongoose');
+const Chat = require('./chatModel');
 // Maps tp MongoDB 'message' collection.
 
 const MessageSchema = mongoose.Schema( {
 // Text message sent.
     text: { 
         type: String, 
-        trim: true ,
+        trim: true,
     },
     // Sender data.
     sender: {
@@ -16,7 +17,7 @@ const MessageSchema = mongoose.Schema( {
         ref: 'User',
     },
     // Id of chatroom.
-    roomId: { 
+    chat: { 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Chat',
     },

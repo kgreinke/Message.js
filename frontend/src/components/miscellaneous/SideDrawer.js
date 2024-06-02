@@ -9,6 +9,7 @@ import ProfileModal from "./ProfileModal";
 import { useHistory } from "react-router-dom"
 import axios from "axios";
 import ChatLoading from "../ChatLoading";
+import { getSender } from "../../config/ChatLogics";
 import UserListItem from "../UserAvatar/UserListItem";
 
 const SideDrawer = () => {
@@ -17,7 +18,7 @@ const SideDrawer = () => {
   const [loading, setLoading] = useState(false)
   const [loadingChat, setLoadingChat] = useState()
   
-  const { user, setSelectedChat, chats, setChats} = ChatState();
+  const { user, setSelectedChat, chats, setChats, notification, setNotification} = ChatState();
   const history = useHistory();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -114,7 +115,7 @@ const SideDrawer = () => {
             label="Search Users to chat" hasArrow placement='bottom-end'>
               <Button variant= "ghost" onClick={onOpen}>
                 <i class="fas fa-search"></i>
-                <Text d={{ base: "none", md: "flex" }} px ="4">
+                <Text d={{ base: "none", md: "flex" }} px ={4}>
                   Search User 
                 </Text>
               </Button>
@@ -127,7 +128,22 @@ const SideDrawer = () => {
               <MenuButton p={1}>
                 <BellIcon fontSize="2xl" m={1} />
               </MenuButton>
-                {/*<MenuList><MenuList/>*/}
+              <MenuList pl={2}>
+                {!notification.length && "No New Messages"}
+                {notification.map((notif) => (
+                  <MenuItem
+                    key={notif._id}
+                    onClick={() => {
+                      setSelectedChat(notif.chat);
+                      setNotification(notification.filter((n) => n !== notif));
+                    }}
+                  >
+                    {notif.chat.isGroupChat
+                      ? `New Message in ${notif.chat.chatName}`
+                      : `New Message from ${getSender(user, notif.chat.users)}`}
+                  </MenuItem>
+              ))}
+            </MenuList>
             </Menu>
               <Menu>
                 <MenuButton as={Button} rightIcon={<ChevronDownIcon/>}>
@@ -135,7 +151,7 @@ const SideDrawer = () => {
                 </MenuButton>
                 <MenuList>
                   <ProfileModal user={user}>
-                    <MenuItem>My Profile</MenuItem>
+                    <MenuItem>My Profile</MenuItem>{" "}
                   </ProfileModal>
                     <MenuDivider />
                   <MenuItem onClick={logoutHandler}>Logout</MenuItem>
