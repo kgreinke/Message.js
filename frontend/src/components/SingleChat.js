@@ -89,16 +89,16 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             },
           };
 
-          setNewMessage("");
           const { data } = await axios.post(
-            "/api/message",
+            '/api/message/',
               {
-                text: newMessage,
+                content: newMessage,
                 chatId: selectedChat._id,
               },
               config
           );
-
+          
+          setNewMessage("");
           socket.emit("new message", data);
           setMessages([...messages, data]);
         } catch (error) {
