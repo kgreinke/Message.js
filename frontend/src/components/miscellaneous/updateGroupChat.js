@@ -206,10 +206,12 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
   return (
     <>
   <IconButton
+    
     icon={<ViewIcon />}
     onClick={onOpen}
-    position="absolute" // Add this line
+    //position="absolute" // Add this line
     right="10px" // Adjust this value as needed
+    ml="2"
   />
 
       <Modal onClose={onClose} isOpen={isOpen} isCentered>

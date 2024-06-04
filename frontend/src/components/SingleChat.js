@@ -169,9 +169,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             display="flex" 
             justifyContent={{base: "space-between"}}
             alignItems="center"
+            //border="1px solid red" // Add a border to visualize the boundaries of the Text component
+
           >
             <IconButton
-              d={{base: "flex", md:"30px"}}
+              display={{base: "flex"}}
               icon={<ArrowBackIcon />}
               onClick={() => setSelectedChat("")}
             />
