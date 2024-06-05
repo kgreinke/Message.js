@@ -11,17 +11,12 @@ import animationData from "./miscellaneous/typing.json";
 import Lottie from "lottie-react";
 import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/updateGroupChat";
+
+//this part will be changed later
 const ENDPOINT = "http://localhost:3000";
+
 var socket, selectedChatCompare;
 
-const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-};
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const [messages,setMessages] = useState([]);
@@ -32,12 +27,23 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const [loading, setLoading] = useState(false);
     const toast = useToast();
 
+
+    const defaultOptions = {
+      loop: true,
+      autoplay: true,
+      animationData: animationData,
+      rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+};
+
     const { selectedChat, setSelectedChat, user, notification, setNotification } = ChatState();
 
     useEffect( () => {
       socket = io(ENDPOINT);
       socket.emit("setup", user);
-      socket.on("connected", () => setSocketConnected(true));
+      socket.on("connection", () => setSocketConnected(true));
+
       socket.on("typing", () => setIsTyping(true));
       socket.on("stopped typing", () => setIsTyping(false));
       // eslint-disable-next-line
@@ -64,6 +70,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           setLoading(false)
 
           socket.emit("join chatroom", selectedChat._id);
+
         } catch (error) {
           toast({
             title: "Error Occured!",
@@ -119,18 +126,18 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         selectedChatCompare = selectedChat;
     }, [selectedChat]);
 
-    useEffect( () => {
-        socket.on("message recieved", (recievedMessage) => {
-            if(!selectedChatCompare || selectedChatCompare._id !== recievedMessage.chat._id) {
-              if (!notification.includes(recievedMessage)) {
-                setNotification([recievedMessage, ...notification]);
-                setFetchAgain(!fetchAgain);
-              }
-            } else {
-              setMessages([...messages, recievedMessage]);
-            }
-        });
+  useEffect(() => {
+    socket.on("message received", (newMessageRecieved) => {
+      if (!selectedChatCompare ||selectedChatCompare._id !== newMessageRecieved.chat._id) {
+        if (!notification.includes(newMessageRecieved)) {
+          //setNotification([newMessageRecieved, ...notification]);
+          //setFetchAgain(!fetchAgain);
+        }
+      } else {
+        setMessages([...messages, newMessageRecieved]);
+      }
     });
+  });
 
     const typingHandler = (event) => {
         setNewMessage(event.target.value);
