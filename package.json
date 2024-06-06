@@ -4,10 +4,9 @@
   "description": "learing mern stack",
   "main": "index.js",
   "scripts": {
-    "install-all": "npm install --prefix backend && npm install --prefix frontend",
-    "start": "node backend/sever.js",
-    "build": "npm install && npm install --prefix frontend && npm run build",
-    "heroku-postbuild": "npm run install-all && npm run build"
+    "start": "node backend/server.js",
+    "server": "nodemon backend/server.js",
+    "build": "npm install --legacy-peer-deps && npm install --legacy-peer-deps --prefix frontend && npm run build --prefix frontend"
   },
   "author": "Kat Greinke, Erick _",
   "license": "ISC",
