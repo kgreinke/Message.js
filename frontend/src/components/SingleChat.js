@@ -7,7 +7,6 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import ProfileModal from "./miscellaneous/ProfileModal";
 import ScrollableChat from "./ScrollableChat";
 import { ChatState } from "../Context/ChatProvider";
-import animationData from "../animations/typing.json";
 import { Player } from '@lottiefiles/react-lottie-player';
 import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/updateGroupChat";
