@@ -44,7 +44,10 @@ Message.js is an innovative, real-time communication platform designed to enhanc
     git clone https://github.com/kgreinke/Message.js.git
     cd Message.js
     ```
+
 2. Installing Dependencies:
+> [!NOTE]
+> After the frontend modules are installed, it will say that there are vulnerabilities, you can ignore this.
    - Frontend:
    ```bash
    cd frontend
@@ -56,8 +59,7 @@ Message.js is an innovative, real-time communication platform designed to enhanc
    cd backend
    npm install
    ```
-> [!NOTE]
-> After the frontend modules are installed, it will say that there are vulnerabilities, you can ignore this.
+
 3. Start up
    In seperate terminals from repository root directory:
    - Backend:
@@ -70,6 +72,7 @@ Message.js is an innovative, real-time communication platform designed to enhanc
    cd frontend
    npm start
    ```
+   
 4. Open your preferred browser and navigate to http://localhost:3000
 > [!TIP]
 > If you are running this in VS Code, your default browser will automatically open to the site.
