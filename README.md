@@ -14,7 +14,6 @@ Message.js is an innovative, real-time communication platform designed to enhanc
 - **Authentication**
    - **_User Registration:_** Simple and secure sign-up process to onboard new users.
    - **_Login/Logout:_** Efficient and secure authentication mechanisms to ensure user data protection and integrity.
-   - **_User Management:_** Comprehensive user profile management capabilities, including password recovery and profile updates.
 
 - **Creating New Chat Rooms**
    - **_Individual and Group Chats:_** Effortlessly create new chat rooms with one or multiple users, facilitating both personal and team communication.
