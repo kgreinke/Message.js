@@ -7,7 +7,7 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import ProfileModal from "./miscellaneous/ProfileModal";
 import ScrollableChat from "./ScrollableChat";
 import { ChatState } from "../Context/ChatProvider";
-import animationData from "./miscellaneous/typing.json";
+import animationData from "../animations/typing.json";
 import Lottie from "lottie-react";
 import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/updateGroupChat";
@@ -42,10 +42,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     useEffect( () => {
       socket = io(ENDPOINT);
       socket.emit("setup", user);
-      socket.on("connection", () => setSocketConnected(true));
+      socket.on("connected", () => setSocketConnected(true));
 
       socket.on("typing", () => setIsTyping(true));
-      socket.on("stopped typing", () => setIsTyping(false));
+      socket.on("stop typing", () => setIsTyping(false));
       // eslint-disable-next-line
     }, []);    
 
@@ -86,7 +86,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
     const sendMessage = async (event) => {
       if (event.key === "Enter" && newMessage){
-        socket.emit("stopped typing", selectedChat._id);
+        socket.emit("stop typing", selectedChat._id);
         
         try {
           const config = {
@@ -150,17 +150,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             socket.emit("typing", selectedChat._id);
         }
 
-        let timeout = new Date().getTime();
-        var timer = 3000;
+        let lastTypingTime = new Date().getTime();
+        var timerLength = 3000;
         setTimeout( () => {
-            var now = new Date().getTime();
-            var diff = now - timeout;
+            var timeNow = new Date().getTime();
+            var timeDiff = timeNow - lastTypingTime;
 
-            if (diff >= timer && typing){
-                socket.emit("stopped typing", selectedChat._id);
+            if (timeDiff >= timerLength && typing){
+                socket.emit("stop typing", selectedChat._id);
                 setTyping(false);
             }
-        }, timer);
+        }, timerLength);
     };
 
   return (
@@ -236,17 +236,18 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 <div>
                   <Lottie
                     options={defaultOptions}
+                    // height={50}
                     width={70}
-                    style={{marginBottom: 15, marginLeft: 0}}
+                    style={{ marginBottom: 15, marginLeft: 0 }}
                   />
                 </div>
-              ): (
+              ) : (
                 <></>
               )}
               <Input
                 variant="filled"
                 bg="#E0E0E1"
-                placeholder="Start Typing..."
+                placeholder="Enter a message..."
                 value={newMessage}
                 onChange={typingHandler}
               />

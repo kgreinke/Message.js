@@ -65,22 +65,21 @@ io.on("connection", (socket) => {
           socket.in(user._id).emit("message received", newMessageRecieved);
         });
     });
-/*
-    socket.on("typing", (chat) => {
-        socket.in(chat).emit("typing...");
+
+    socket.on("typing", (room) => {
+        socket.in(room).emit("typing");
     });
 
-    socket.on("stopped typing", (chat) => {
-        socket.in(chat).emit("stopped typing...");
+    socket.on("stop typing", (room) => {
+        socket.in(room).emit("stop typing");
     });
 
-    
-
-    socket.off("setup", () => {
+    socket.on("setup", (userData) => {
         console.log("user disconnected".yellow);
-        socket.leave(userData._id);
+        socket.join(userData._id);
+        socket.emit("connected")
     });
-    */
+    
 });
 
 const PORT = process.env.PORT || 4000;
