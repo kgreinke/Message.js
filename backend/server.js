@@ -73,6 +73,7 @@ const io = require("socket.io")(server, {
   },
 });
 
+
 io.on("connection", (socket) => {
   console.log("Connected to socket.io");
   socket.on("setup", (userData) => {
@@ -103,7 +104,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("setup", (userData) => {
-        console.log("user disconnected".yellow);
+        console.log("user connected".green);
         socket.join(userData._id);
         socket.emit("connected")
     });

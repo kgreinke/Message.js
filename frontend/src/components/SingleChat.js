@@ -8,7 +8,7 @@ import ProfileModal from "./miscellaneous/ProfileModal";
 import ScrollableChat from "./ScrollableChat";
 import { ChatState } from "../Context/ChatProvider";
 import animationData from "../animations/typing.json";
-import Lottie from "lottie-react";
+import { Player } from '@lottiefiles/react-lottie-player';
 import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/updateGroupChat";
 
@@ -28,16 +28,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const [socketConnected, setSocketConnected] = useState(false);
     const [loading, setLoading] = useState(false);
     const toast = useToast();
-
-
-    const defaultOptions = {
-      loop: true,
-      autoplay: true,
-      animationData: animationData,
-      rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-};
 
     const { selectedChat, setSelectedChat, user, notification, setNotification } = ChatState();
 
@@ -236,11 +226,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             >
               {isTyping ? (
                 <div>
-                  <Lottie
-                    options={defaultOptions}
-                    height={50}
-                    width={70}
-                    style={{ marginBottom: 15, marginLeft: 0 }}
+                  <Player 
+                    src="https://lottie.host/12b5eb8b-8a4c-4f70-b019-f94bb22d6f3c/1pQkiGvKa2.json" 
+                    className="player" 
+                    speed={1} 
+                    style={{ height: "40px", width: "70px" }} 
+                    loop 
+                    autoplay
                   />
                 </div>
               ) : (
