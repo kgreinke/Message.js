@@ -31,9 +31,6 @@ app.use("/api/message", messageRoutes);
 
 //*************Deployment************ */
 
-
-
-
 const __dirname1 = path.resolve();
 
 if (process.env.NODE_ENV === "production") {
@@ -48,7 +45,6 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-
 //*************Deployment************ */
 
 app.use(notFound);
@@ -60,14 +56,22 @@ app.use(express.json());
 const port = process.env.PORT || 4000;
 const server = app.listen(port, console.log(`Server running on port: ${port}`.yellow.bold));
 
+// Use this for local hosting, just make sure to swap what is used in SingleChat.js.
+/*
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
     origin: "http://localhost:3000",
   },
 });
-
-
+*/
+// Use this for render deployment
+const io = require("socket.io")(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: "https://message-js.onrender.com/",
+  },
+});
 
 io.on("connection", (socket) => {
   console.log("Connected to socket.io");

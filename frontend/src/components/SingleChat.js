@@ -12,8 +12,10 @@ import Lottie from "lottie-react";
 import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/updateGroupChat";
 
-//this part will be changed later
-const ENDPOINT = "http://localhost:3000";
+// Use this for local hosting, just make sure to swap what is used in server.js.
+//const ENDPOINT = "http://localhost:3000";
+// Use this for render deployment
+const ENDPOINT = "https://message-js.onrender.com/";
 
 var socket, selectedChatCompare;
 
