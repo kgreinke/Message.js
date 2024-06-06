@@ -47,7 +47,7 @@ Message.js is an innovative, real-time communication platform designed to enhanc
 
 2. Installing Dependencies:
 > [!NOTE]
-> After the frontend modules are installed, it will say that there are vulnerabilities, you can ignore this.
+    > After the frontend modules are installed, it will say that there are vulnerabilities, you can ignore this.
    - Frontend:
    ```bash
    cd frontend
@@ -72,7 +72,7 @@ Message.js is an innovative, real-time communication platform designed to enhanc
    cd frontend
    npm start
    ```
-   
+
 4. Open your preferred browser and navigate to http://localhost:3000
 > [!TIP]
 > If you are running this in VS Code, your default browser will automatically open to the site.
