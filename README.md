@@ -46,9 +46,9 @@ Message.js is an innovative, real-time communication platform designed to enhanc
     ```
 
 2. Installing Dependencies:
-> [!NOTE]
-    > After the frontend modules are installed, it will say that there are vulnerabilities, you can ignore this.
    - Frontend:
+   > [!NOTE]
+   > After the frontend modules are installed, it will say that there are vulnerabilities, you can ignore this.
    ```bash
    cd frontend
    npm install
