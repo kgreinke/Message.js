@@ -1,5 +1,7 @@
 import { Box, Text} from "@chakra-ui/layout"
-import { Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Input, Menu, MenuButton, MenuDivider, MenuItem, MenuList, Spinner, Tooltip, useDisclosure, useToast } from '@chakra-ui/react';
+import { Drawer, DrawerBody, DrawerContent, DrawerHeader, 
+  DrawerOverlay, Input, Menu, MenuButton, MenuDivider, 
+  MenuItem, MenuList, Spinner, Tooltip, effect, useDisclosure, useToast } from '@chakra-ui/react';
 import { Button } from '@chakra-ui/button';
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import React, { useState } from 'react';
@@ -11,6 +13,8 @@ import axios from "axios";
 import ChatLoading from "../ChatLoading";
 import { getSender } from "../../config/ChatLogics";
 import UserListItem from "../UserAvatar/UserListItem";
+import NotificationBadge from "react-notification-badge";
+import { Effect } from "react-notification-badge";
 
 const SideDrawer = () => {
   const [search, setSearch] = useState("")
@@ -126,6 +130,10 @@ const SideDrawer = () => {
           <div>
             <Menu>
               <MenuButton p={1}>
+               <NotificationBadge
+                count={notification.length}
+                effect={Effect.SCALE}
+               />
                 <BellIcon fontSize="2xl" m={1} />
               </MenuButton>
               <MenuList pl={2}>
