@@ -127,13 +127,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         selectedChatCompare = selectedChat;
     }, [selectedChat]);
 
+    console.log(notification, "--------------------------------");
+
   useEffect(() => {
     // Update messages upon receiving new message
     socket.on("message received", (newMessageRecieved) => {
       if (!selectedChatCompare ||selectedChatCompare._id !== newMessageRecieved.chat._id) {
         if (!notification.includes(newMessageRecieved)) {
-          //setNotification([newMessageRecieved, ...notification]);
-          //setFetchAgain(!fetchAgain);
+          setNotification([newMessageRecieved, ...notification]);
+          setFetchAgain(!fetchAgain);
         }
       } else {
         setMessages([...messages, newMessageRecieved]);
