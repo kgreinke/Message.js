@@ -1,3 +1,5 @@
+// components/MyChats.js
+
 import { AddIcon } from "@chakra-ui/icons";
 import { Box, Stack, Text } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/toast";
@@ -10,14 +12,17 @@ import { Button } from "@chakra-ui/react";
 import { ChatState } from "../Context/ChatProvider";
 
 const MyChats = ({ fetchAgain }) => {
+  // State for the logged-in user
   const [loggedUser, setLoggedUser] = useState();
 
+  // Destructuring necessary states and functions from ChatState
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
 
+  // Toast hook for displaying notifications
   const toast = useToast();
 
+  // Function to fetch chats from the server
   const fetchChats = async () => {
-    // console.log(user._id);
     try {
       const config = {
         headers: {
@@ -39,6 +44,7 @@ const MyChats = ({ fetchAgain }) => {
     }
   };
 
+  // Fetch chats when the component mounts or when fetchAgain changes
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChats();
@@ -57,6 +63,7 @@ const MyChats = ({ fetchAgain }) => {
       borderRadius="lg"
       borderWidth="1px"
     >
+      {/* Header section */}
       <Box
         pb={3}
         px={3}
@@ -67,6 +74,7 @@ const MyChats = ({ fetchAgain }) => {
         justifyContent="space-between"
         alignItems="center"
       >
+        {/* Button for creating a new group chat */}
         My Chats
         <GroupChatModal>
           <Button
@@ -78,6 +86,7 @@ const MyChats = ({ fetchAgain }) => {
           </Button>
         </GroupChatModal>
       </Box>
+      {/* Chat list section */}
       <Box
         display="flex" 
         flexDir="column"
@@ -88,6 +97,7 @@ const MyChats = ({ fetchAgain }) => {
         borderRadius="lg"
         overflowY="hidden"
       >
+        {/* Render chats or loading indicator */}
         {chats ? (
           <Stack overflowY="scroll">
             {chats.map((chat) => (
@@ -101,6 +111,7 @@ const MyChats = ({ fetchAgain }) => {
                 borderRadius="lg"
                 key={chat._id}
               >
+                {/* Display chat information */}
                 <Text>
                   {!chat.isGroupChat
                     ? getSender(loggedUser, chat.users)

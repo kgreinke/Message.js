@@ -1,3 +1,5 @@
+// components/UserBadgeItem.js
+
 import React from 'react'
 import { Box } from "@chakra-ui/react"
 import { CloseIcon } from "@chakra-ui/icons"

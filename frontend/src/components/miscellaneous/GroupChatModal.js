@@ -1,3 +1,5 @@
+// components/miscellaneous/GroupChatModal.js
+
 import { Button, FormControl, Input, useDisclosure, useToast, Box} from '@chakra-ui/react'
 import React, { useState } from 'react';
 import {
@@ -15,17 +17,23 @@ import UserListItem from "../UserAvatar/UserListItem";
 import UserBadgeItem from '../UserAvatar/UserBadgeItem';
 
 const GroupChatModal = ({children}) => {
-    const { isOpen, onOpen, onClose } = useDisclosure()
-    const [groupChatName, setGroupChatName] = useState();
-    const [selectedUsers, setSelectedUsers] = useState([]);
-    const [search, setSearch] = useState("");
-    const [searchResult, setSearchResult] = useState([]);
-    const [loading, setLoading] = useState(false);
+  // Disclosure hook for modal
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
+  // State variables
+  const [groupChatName, setGroupChatName] = useState();     // State for group chat name input
+  const [selectedUsers, setSelectedUsers] = useState([]);   // State for selected users
+  const [search, setSearch] = useState("");                 // State for search input
+  const [searchResult, setSearchResult] = useState([]);     // State for search results
+  const [loading, setLoading] = useState(false);            // State for loading state
     
-    const toast = useToast();
+  // Toast hook for notifications
+  const toast = useToast();
 
-    const { user, chats, setChats } = ChatState();
+  // ChatState context for user and chats data
+  const { user, chats, setChats } = ChatState();
 
+  // Function to handle user search
   const handleSearch = async (query) => {
     setSearch(query);
     if (!query) {
@@ -55,6 +63,7 @@ const GroupChatModal = ({children}) => {
     }
   };
   
+    // Function to handle form submission
     const handleSubmit = async() => {
       if(!groupChatName || !selectedUsers){
         toast({
@@ -100,13 +109,13 @@ const GroupChatModal = ({children}) => {
         }
     };
 
+    // Function to handle user deletion from selected users
+    const handleDelete = (delUser) => {
+      setSelectedUsers(selectedUsers.filter((sel) => sel._id !== delUser._id));
+    };
 
-  const handleDelete = (delUser) => {
-    setSelectedUsers(selectedUsers.filter((sel) => sel._id !== delUser._id));
-  };
 
-
-
+    // Function to handle adding user to selected users
     const handleGroup = (userToAdd) => {
         if(selectedUsers.includes(userToAdd)) {
             toast({
@@ -126,6 +135,7 @@ const GroupChatModal = ({children}) => {
     <>
       <span onClick={onOpen}>{children}</span>
 
+      {/* Group chat modal */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -137,7 +147,9 @@ const GroupChatModal = ({children}) => {
           >
             Create Group Chat</ModalHeader>
           <ModalCloseButton />
+          {/* Modal body */}
           <ModalBody display="flex" flexDir="column" alignItems="center"> 
+            {/* Form control for chat name */}
             <FormControl>
                 <Input 
                 placeholder='Chat Name' 
@@ -145,6 +157,7 @@ const GroupChatModal = ({children}) => {
                 onChange={(e) => setGroupChatName(e.target.value)}
                 />
             </FormControl>
+            {/* Form control for adding users */}
             <FormControl>
                 <Input 
                 placeholder='Add Users eg: Erick, Kat, John' 
@@ -153,10 +166,8 @@ const GroupChatModal = ({children}) => {
                 />
             </FormControl>
 
-          <Box w="100%" display="flex" flexWrap="wrap"
-          
-          
-          >
+          {/* Box to display selected users */}
+          <Box w="100%" display="flex" flexWrap="wrap">
             {selectedUsers.map(u => (
                 <UserBadgeItem key={user._id} user={u}
                 handleFunction={() => handleDelete(u)}
@@ -177,7 +188,7 @@ const GroupChatModal = ({children}) => {
                     ))
                 )}
           </ModalBody>
-
+          {/* Modal footer with leave group button */}
           <ModalFooter>
             <Button colorScheme='blue'  onClick={handleSubmit}>
               Create Chat

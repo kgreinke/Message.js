@@ -1,3 +1,5 @@
+// components/SingleChat.js
+
 import "./styles.css"
 import axios from "axios";
 import { FormControl, Input, Box, Text, IconButton, Spinner, useToast } from "@chakra-ui/react";
@@ -12,14 +14,15 @@ import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/updateGroupChat";
 
 // Use this for local hosting, just make sure to swap what is used in server.js.
-//const ENDPOINT = "http://localhost:3000";
+const ENDPOINT = "http://localhost:3000";
 // Use this for render deployment
-const ENDPOINT = "https://message-js.onrender.com/";
+//const ENDPOINT = "https://message-js.onrender.com/";
 
 var socket, selectedChatCompare;
 
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
+    // State variables
     const [messages,setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [typing, setTyping] = useState(false);
@@ -28,18 +31,24 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     const [loading, setLoading] = useState(false);
     const toast = useToast();
 
-    const { selectedChat, setSelectedChat, user, notification, setNotification } = ChatState();
+    // Extracting data from ChatState
+    const { selectedChat, setSelectedChat, user, notification } = ChatState();
+    // notification under development
+    //const { selectedChat, setSelectedChat, user, notification, setNotification } = ChatState();
 
     useEffect( () => {
+      // Initializing socket connection
       socket = io(ENDPOINT);
       socket.emit("setup", user);
       socket.on("connected", () => setSocketConnected(true));
 
+      // Handling typing events
       socket.on("typing", () => setIsTyping(true));
       socket.on("stop typing", () => setIsTyping(false));
       // eslint-disable-next-line
     }, []);    
 
+    // Function to fetch messages of selected chat
     const fetchMessages = async () => {
       if (!selectedChat)
         return;
@@ -74,7 +83,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         }
     };
 
-
+    // Function to send a new message
     const sendMessage = async (event) => {
       if (event.key === "Enter" && newMessage){
         socket.emit("stop typing", selectedChat._id);
@@ -112,12 +121,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       }
     };
 
+    // Fetch messages on selected chat change
     useEffect( () => {
         fetchMessages();
         selectedChatCompare = selectedChat;
     }, [selectedChat]);
 
   useEffect(() => {
+    // Update messages upon receiving new message
     socket.on("message received", (newMessageRecieved) => {
       if (!selectedChatCompare ||selectedChatCompare._id !== newMessageRecieved.chat._id) {
         if (!notification.includes(newMessageRecieved)) {
@@ -130,6 +141,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     });
   });
 
+    // Typing event handler
     const typingHandler = (event) => {
         setNewMessage(event.target.value);
 
@@ -158,6 +170,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     <>
       {selectedChat ? (
         <>
+          {/* Header */}
           <Text
             fontSize={{base: "28px", md: "30px"}}
             pb={3}
@@ -170,11 +183,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             //border="1px solid red" // Add a border to visualize the boundaries of the Text component
 
           >
+            {/* Back Button */}
             <IconButton
               display={{base: "flex"}}
               icon={<ArrowBackIcon />}
               onClick={() => setSelectedChat("")}
             />
+            {/* Chat Title */}
             {messages &&
               (!selectedChat.isGroupChat ?(
                 <>
@@ -184,6 +199,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             ):(
                 <>
                   {selectedChat.chatName.toUpperCase()}
+                  {/* Update Group Chat Modal */}
                   <UpdateGroupChatModal
                     fetchMessages={fetchMessages}
                     fetchAgain={fetchAgain}
@@ -192,6 +208,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 </>
             ))}
           </Text>
+          {/* Message Container */}
           <Box
             display="flex"
             flexDir="column"
@@ -203,6 +220,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             borderRadius="lg"
             overflowY="hidden"
           >
+            {/* Loading Spinner */}
             {loading ? (
               <Spinner
                 size="x1"
@@ -217,12 +235,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               </div>
             )}
 
+            {/* Message Input */}
             <FormControl
               onKeyDown={sendMessage}
               id="first-name"
               isRequired
               mt={3}
             >
+              {/* Typing Indicator */}
               {isTyping ? (
                 <div>
                   <Player 
@@ -237,6 +257,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               ) : (
                 <></>
               )}
+              {/* Message Input Field */}
               <Input
                 variant="filled"
                 bg="#E0E0E1"

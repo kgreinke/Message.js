@@ -1,3 +1,5 @@
+// components/UserListItem.js
+
 import { Avatar, Box, Text } from '@chakra-ui/react';
 import React from 'react'
 
@@ -20,6 +22,7 @@ const UserListItem = ({user, handleFunction}) => {
         mb={2}
         borderRadius="lg"
     >
+        {/* User avatar */}
         <Avatar
             mr={2}
             size="sm"
@@ -28,7 +31,9 @@ const UserListItem = ({user, handleFunction}) => {
             src={user.pic}
         />
         <Box>
+            {/* User name */}
             <Text> {user.name} </Text>
+            {/* User email */}
             <Text fontSize="xs">
                 <b>Email: </b>
                 {user.email}

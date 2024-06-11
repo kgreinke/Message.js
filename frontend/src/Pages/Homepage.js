@@ -1,3 +1,5 @@
+// Pages/Homepage.js
+
 import React, { useEffect } from 'react'
 import { Container, Box, Text, Tab, TabList, TabPanel, TabPanels, Tabs,} from "@chakra-ui/react";
 import Login from "../components/Authentication/Login";

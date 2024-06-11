@@ -1,3 +1,5 @@
+// controllers/userController.js
+
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const generateToken = require("../config/generateToken");
@@ -6,16 +8,20 @@ const generateToken = require("../config/generateToken");
 // Access       Protected
 // Description  Get or search all users by user.name or user.email
 const allUsers = asyncHandler(async (req, res) => {
+  // Get search keyword from query parameters
   const keyword = req.query.search
     ? {
         $or: [
-          { name: { $regex: req.query.search, $options: "i" } },
-          { email: { $regex: req.query.search, $options: "i" } },
+          { name: { $regex: req.query.search, $options: "i" } }, // Case-insensitive search by name
+          { email: { $regex: req.query.search, $options: "i" } }, // Case-insensitive search by email
         ],
       }
     : {};
 
+  // Find users matching the keyword, excluding the requesting user
   const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+
+  // Send the list of users as response
   res.send(users);
 });
 
@@ -25,18 +31,20 @@ const allUsers = asyncHandler(async (req, res) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password, pic } = req.body;
 
+  // Check if all required fields are provided
   if (!name || !email || !password) {
     res.status(400);
     throw new Error("Please Enter all the Feilds");
   }
 
+  // Check if a user with the given email already exists
   const userExists = await User.findOne({ email });
-
   if (userExists) {
     res.status(400);
     throw new Error("User already exists");
   }
 
+  // Create a new user
   const user = await User.create({
     name,
     email,
@@ -44,6 +52,7 @@ const registerUser = asyncHandler(async (req, res) => {
     pic,
   });
 
+  // If user creation is successful, send user details and token as response
   if (user) {
     res.status(201).json({
       _id: user._id,
@@ -65,9 +74,12 @@ const registerUser = asyncHandler(async (req, res) => {
 const authUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
+  // Find the user by email
   const user = await User.findOne({ email });
 
+  // Check if user exists and if the password matches
   if (user && (await user.matchPassword(password))) {
+    // Send user details and token as response
     res.json({
       _id: user._id,
       name: user.name,
@@ -82,4 +94,5 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
+// Export the controller functions
 module.exports = { allUsers, registerUser, authUser };

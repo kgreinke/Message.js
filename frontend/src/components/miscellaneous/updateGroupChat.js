@@ -23,16 +23,23 @@ import UserBadgeItem from "../UserAvatar/UserBadgeItem";
 import UserListItem from "../UserAvatar/UserListItem";
 
 const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
+  // Disclosure hook for modal
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [groupChatName, setGroupChatName] = useState();
-  const [search, setSearch] = useState("");
-  const [searchResult, setSearchResult] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [renameloading, setRenameLoading] = useState(false);
+  
+  // State variables
+  const [groupChatName, setGroupChatName] = useState();       // State for group chat name input
+  const [search, setSearch] = useState("");                   // State for search input
+  const [searchResult, setSearchResult] = useState([]);       // State for search results
+  const [loading, setLoading] = useState(false);              // State for loading state
+  const [renameloading, setRenameLoading] = useState(false);  // State for renameing group chat name input
+  
+  // Toast hook for notifications
   const toast = useToast();
 
+  // ChatState context for selected chat and user data
   const { selectedChat, setSelectedChat, user } = ChatState();
 
+  // Function to handle user search
   const handleSearch = async (query) => {
     setSearch(query);
     if (!query) {
@@ -63,6 +70,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
     }
   };
 
+  // Function to handle renaming the group chat
   const handleRename = async () => {
     if (!groupChatName) return;
 
@@ -101,6 +109,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
     setGroupChatName("");
   };
 
+  // Function to add a user to the group chat
   const handleAddUser = async (user1) => {
     if (selectedChat.users.find((u) => u._id === user1._id)) {
       toast({
@@ -157,6 +166,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
     setGroupChatName("");
   };
 
+  // Function to remove a user from the group chat
   const handleRemove = async (user1) => {
     if (selectedChat.groupAdmin._id !== user._id && user1._id !== user._id) {
       toast({
@@ -205,18 +215,20 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
 
   return (
     <>
-  <IconButton
-    
-    icon={<ViewIcon />}
-    onClick={onOpen}
-    //position="absolute" // Add this line
-    right="10px" // Adjust this value as needed
-    ml="2"
-  />
+      {/* IconButton to open the modal */}
+      <IconButton
+        icon={<ViewIcon />}
+        onClick={onOpen}
+        //position="absolute" // Add this line
+        right="10px" // Adjust this value as needed
+        ml="2"
+      />
 
+      {/* Modal for updating group chat */}
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent>
+          {/* Modal header */}
           <ModalHeader
             fontSize="35px"
             fontFamily="Work sans"
@@ -225,9 +237,11 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
           >
             {selectedChat.chatName}
           </ModalHeader>
-
+          {/* Modal close button */}
           <ModalCloseButton />
+          {/* Modal body */}
           <ModalBody display="flex" flexDir="column" alignItems="center">
+            {/* Displaying users in the group */}
             <Box w="100%" display="flex" flexWrap="wrap" pb={3} color="#5230df">
               {selectedChat.users.map((u) => (
                 <UserBadgeItem
@@ -238,6 +252,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
                 />
               ))}
             </Box>
+            {/* Form control for updating chat name */}
             <FormControl display="flex">
               <Input
                 placeholder="Chat Name"
@@ -245,6 +260,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
                 value={groupChatName}
                 onChange={(e) => setGroupChatName(e.target.value)}
               />
+              {/* Button to update chat name */}
               <Button
                 variant="solid"
                 colorScheme="teal"
@@ -255,6 +271,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
                 Update               
               </Button>
             </FormControl>
+            {/* Form control for searching and adding users */}
             <FormControl>
               <Input
                 placeholder="Add User to group"
@@ -262,7 +279,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </FormControl>
-
+            {/* Display search result and add user functionality */}
             {loading ? (
               <Spinner size="lg" />
             ) : (
@@ -275,6 +292,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
               ))
             )}
           </ModalBody>
+          {/* Modal footer with leave group button */}
           <ModalFooter>
             <Button onClick={() => handleRemove(user)} colorScheme="red">
               Leave Group

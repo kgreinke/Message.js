@@ -1,3 +1,5 @@
+// components/ChatBox.js
+
 import "./styles.css";
 
 import React from 'react'

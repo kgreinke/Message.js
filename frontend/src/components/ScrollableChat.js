@@ -10,13 +10,16 @@ import {
 import { ChatState } from "../Context/ChatProvider";
 
 const ScrollableChat = ({ messages }) => {
+  // Accessing user information from the ChatState
   const { user } = ChatState();
 
   return (
     <ScrollableFeed>
+      {/* Mapping through messages */}
       {messages &&
         messages.map((m, i) => (
           <div style={{ display: "flex" }} key={m._id}>
+            {/* Displaying sender avatar with tooltip */}
             {(isSameSender(messages, m, i, user._id) ||
               isLastMessage(messages, i, user._id)) && (
               <Tooltip label={m.sender.name} placement="bottom-start" hasArrow>
@@ -30,6 +33,7 @@ const ScrollableChat = ({ messages }) => {
                 />
               </Tooltip>
             )}
+            {/* Displaying message content */}
             <span
               style={{
                 backgroundColor: `${

@@ -1,3 +1,5 @@
+// Pages/ChatPage.js
+
 import { Box } from "@chakra-ui/layout";
 import { useState } from "react";
 import ChatBox from "../components/ChatBox";

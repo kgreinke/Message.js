@@ -1,10 +1,11 @@
+// app.js
+
 import './App.css';
 import { Route } from "react-router-dom";
 import Homepage from "./Pages/Homepage";
 import Chatpage from "./Pages/ChatPage";
 
-
-
+// App component rendering routes for different pages
 function App() {
   return (
     <div className="App">
@@ -13,6 +14,5 @@ function App() {
     </div>
   );
 }
-
 
 export default App;
