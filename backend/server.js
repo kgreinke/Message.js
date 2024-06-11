@@ -79,14 +79,15 @@ const server = app.listen(port, console.log(`Server running on port: ${port}`.ye
 // Use this for local hosting, just make sure to swap what is used in SingleChat.js.
 
 // Initialize Socket.io for real-time communication
+/*
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
     origin: "http://localhost:3000",
   },
 });
+*/
 
-/*
 // Use this for render deployment
 
 const io = require("socket.io")(server, {
@@ -95,7 +96,7 @@ const io = require("socket.io")(server, {
     origin: "https://message-js.onrender.com/",
   },
 });
-*/
+
 /* ************************************************************************************* */
 
 

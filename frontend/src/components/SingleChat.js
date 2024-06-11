@@ -14,9 +14,9 @@ import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/updateGroupChat";
 
 // Use this for local hosting, just make sure to swap what is used in server.js.
-const ENDPOINT = "http://localhost:3000";
+//const ENDPOINT = "http://localhost:3000";
 // Use this for render deployment
-//const ENDPOINT = "https://message-js.onrender.com/";
+const ENDPOINT = "https://message-js.onrender.com/";
 
 var socket, selectedChatCompare;
 
