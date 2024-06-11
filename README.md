@@ -5,6 +5,7 @@
 - [Key Features available in this app](#key-features)
 - [Technology utilized](#technological-backbone)
 - [Instillation Guide](#instalation)
+- [Postman Testing](#postman-testing)
 - [Contributions](#made-by)
 
 ## Overview
@@ -83,6 +84,42 @@ Message.js is an innovative, real-time communication platform designed to enhanc
 
 ## Deployment Server
 https://message-js.onrender.com/
+
+## Postman Testing
+
+- New User Post
+  <img src="Postman_testing/Screenshot 2024-06-10 162944.png" alt="User Post Request">
+
+- User Login Request
+  <img src="Postman_testing/Screenshot 2024-06-10 162954.png" alt="User Login Request">
+
+- Search User Request
+  <img src="Postman_testing/Screenshot 2024-06-10 163001.png" alt="User Login Request">
+
+- New One-To-One Chat Post
+  <img src="Postman_testing/Screenshot 2024-06-10 163006.png" alt="User Post Request">
+
+- Get Chat Request
+  <img src="Postman_testing/Screenshot 2024-06-10 163013.png" alt="User Login Request">
+
+- New Group Chat Post
+  <img src="Postman_testing/Screenshot 2024-06-10 163021.png" alt="User Post Request">
+
+- Rename Group Chat Request
+  <img src="Postman_testing/Screenshot 2024-06-10 163031.png" alt="User Post Request">
+
+- Add To Group Request
+  <img src="Postman_testing/Screenshot 2024-06-10 163038.png" alt="User Login Request">
+
+- Remove From Group Request
+  <img src="Postman_testing/Screenshot 2024-06-10 163044.png" alt="User Post Request">
+
+- New Message Post
+  <img src="Postman_testing/Screenshot 2024-06-10 163049.png" alt="User Login Request">
+
+- Get All Messages By Chat
+  <img src="Postman_testing/Screenshot 2024-06-10 163055.png" alt="User Post Request">
+
 
 ## Made By
 @kgreinke and @francoer
